@@ -1,6 +1,7 @@
 const { app, BrowserWindow, BrowserView, ipcMain, session } = require('electron')
 const path = require('path')
-const ElectronStore = require("electron-store");
+const ElectronStore = require('electron-store')
+const buildContextMenu = require(path.join(__dirname, 'context-menu'))
 
 const appId = 'firerat' + (process.env.FIRE_RAT_SESSION_PREFIX || '')
 
@@ -45,6 +46,7 @@ const createWindow = () => {
           nodeIntegration: false,
           contextIsolation: true,
           sandbox: true,
+          preload: path.join(__dirname, 'service-preload.js'),
           session: session.fromPartition('persist:' + appId + '.' + target.sessionId, {cache: true})
         },
       })
@@ -55,6 +57,7 @@ const createWindow = () => {
       win.on('will-resize', (e, bounds) => {
         view.setBounds(getContentBounds(bounds))
       })
+
       return view
     })
   }
@@ -89,6 +92,11 @@ const createWindow = () => {
   })
 
   ipcMain.on('editpreference', () => store.openInEditor())
+
+  ipcMain.on('show-context-menu', e => {
+    const menu = buildContextMenu()
+    menu.popup(BrowserWindow.fromWebContents(e.sender))
+  })
 
   win.on('ready-to-show', () => {
     win.webContents.send('changeservice', services)

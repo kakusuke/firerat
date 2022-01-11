@@ -16,6 +16,11 @@ services.on('change', target => {
   table.replaceChildren(...target.map((service, index) => {
     return el('tr', [
       el('td', [
+        el('input', [['value', service.sessionId], {
+          blur: e => services.set(state => state.map((s, i) => i === index ? {...s, sessionId: e.target.value} : s))
+        }], [])
+      ]),
+      el('td', [
         el('input', [['value', service.label], {
           blur: e => services.set(state => state.map((s, i) => i === index ? {...s, label: e.target.value} : s))
         }], [])
@@ -32,7 +37,7 @@ services.on('change', target => {
       ]),
     ])
   }), el('tr', [
-    el('td', [['colspan', 3]], [
+    el('td', [['colspan', 4]], [
       el('button', [{
         click: () => {
           services.set(state => state.concat([{label: 'new', url: ''}]))
@@ -40,7 +45,7 @@ services.on('change', target => {
       }], '+')
     ])
   ]), el('tr', [
-    el('td', [['colspan', 3]], [
+    el('td', [['colspan', 4]], [
       el('button', [{
         click: () => {
           services.save()

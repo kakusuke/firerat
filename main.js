@@ -1,17 +1,24 @@
-const { app, BrowserWindow, BrowserView, ipcMain } = require('electron')
-const Store = require('electron-store')
+const { app, BrowserWindow, BrowserView, ipcMain, session } = require('electron')
 const path = require('path')
 const ElectronStore = require("electron-store");
 
-const store = new ElectronStore()
+const appId = 'firerat' + (process.env.FIRE_RAT_SESSION_PREFIX || '')
+
+const store = new ElectronStore({
+  name: appId
+})
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true,
+      preload: path.join(__dirname, 'preload.js'),
+      session: session.fromPartition(appId, {cache: true})
+    },
   })
 
   win.loadFile('index.html')
@@ -26,15 +33,23 @@ const createWindow = () => {
   }
 
   let services = store.get('services') || [
-      {url: 'https://mail.google.com/', label: 'GMail'},
-      {url: 'https://google.com', label: 'Google'}
+      {sessionId: 'gmail', url: 'https://mail.google.com/', label: 'GMail'},
+      {sessionId: 'google', url: 'https://google.com', label: 'Google'}
     ]
 
   let views = []
   function createViews() {
     views = services.map(target => {
-      const view = new BrowserView()
+      const view = new BrowserView({
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+          sandbox: true,
+          session: session.fromPartition('persist:' + appId + '.' + target.sessionId, {cache: true})
+        },
+      })
       view.setBounds(getContentBounds(win.getBounds()))
+      view.setBackgroundColor('#fff')
       view.webContents.loadURL(target.url)
 
       win.on('will-resize', (e, bounds) => {

@@ -88,6 +88,8 @@ const createWindow = () => {
     createViews()
   })
 
+  ipcMain.on('editpreference', () => store.openInEditor())
+
   win.on('ready-to-show', () => {
     win.webContents.send('changeservice', services)
   })

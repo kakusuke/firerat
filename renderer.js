@@ -83,3 +83,6 @@ function el(name, attrs, children, events) {
   }))
   return elm
 }
+
+
+document.querySelector('#preference').addEventListener('click', () => services.editPreference())

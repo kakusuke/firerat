@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld(
     save() {
       ipcRenderer.send('saveservice', services)
     },
+    editPreference() {
+      ipcRenderer.send("editpreference")
+    },
     on(event, cb) {
       listener[event] = listener[event] || []
       listener[event].push(cb)

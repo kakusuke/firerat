@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, ipcMain, session } = require('electron')
+const { app, BrowserWindow, BrowserView, ipcMain, session, shell } = require('electron')
 const path = require('path')
 const ElectronStore = require('electron-store')
 const contextMenu = require('electron-context-menu')
@@ -59,7 +59,16 @@ const createWindow = () => {
       })
 
       contextMenu({
-        window: view.webContents
+        window: view.webContents,
+        prepend: (defaultActions, parameters, browserWindow) => [
+          {
+            label: 'Open link in browser',
+            visible: parameters.linkURL.trim().length > 0,
+            click: () => {
+              shell.openExternal(parameters.linkURL.trim())
+            }
+          }
+        ]
       })
 
       return view

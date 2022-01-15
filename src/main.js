@@ -104,6 +104,8 @@ const createWindow = () => {
   ipcMain.on('saveservice', (e, message) => {
     services = message
     store.set('services', services)
+    win.setBrowserView(null)
+    views.forEach(view => view.webContents.destroy())
     createViews()
   })
 

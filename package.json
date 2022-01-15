@@ -4,7 +4,7 @@
   "description": "",
   "main": ".webpack/main",
   "scripts": {
-    "start": "FIRE_RAT_SESSION_PREFEX=dev_ electron-forge start",
+    "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "check": "electronegativity -i ./"

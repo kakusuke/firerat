@@ -8,7 +8,7 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const appId = 'firerat' + (process.env.FIRE_RAT_SESSION_PREFIX || '')
+const appId = 'firerat.' + process.env.NODE_ENV
 
 const store = new ElectronStore({
   name: appId

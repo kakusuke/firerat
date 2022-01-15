@@ -1,0 +1,31 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+ul {
+  height: 30px;
+  box-sizing: border-box;
+  border-bottom: solid 1px #ccc;
+  list-style: none;
+  display: flex;
+  width: 100%;
+  padding: 0 1em 5px 1em;
+  margin: 0;
+}
+li {
+  padding: 0 0.5em;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+li:not(:last-child)::after {
+  content: '';
+  display: inline-block;
+  border-right: solid 1px #ccc;
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+}

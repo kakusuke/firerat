@@ -3,42 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-<!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">-->
-<!--  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">-->
   <title>FireRat Service Switcher</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-    }
-    ul {
-      height: 30px;
-      box-sizing: border-box;
-      border-bottom: solid 1px #ccc;
-      list-style: none;
-      display: flex;
-      width: 100%;
-      padding: 0 1em 5px 1em;
-      margin: 0;
-    }
-    li {
-      padding: 0 0.5em;
-      position: relative;
-      cursor: pointer;
-      user-select: none;
-    }
-    li:not(:last-child)::after {
-      content: '';
-      display: inline-block;
-      border-right: solid 1px #ccc;
-      position: absolute;
-      right: 0;
-      top: 20%;
-      height: 60%;
-    }
-  </style>
 </head>
 <body>
 <ul></ul>
@@ -59,6 +24,5 @@
   </table>
   <button id="preference">Preference</button>
 </div>
-<script src="renderer.js"></script>
 </body>
 </html>

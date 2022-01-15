@@ -1,7 +1,12 @@
 const { app, BrowserWindow, BrowserView, ipcMain, session, shell } = require('electron')
-const path = require('path')
 const ElectronStore = require('electron-store')
 const contextMenu = require('electron-context-menu')
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) {
+  // eslint-disable-line global-require
+  app.quit();
+}
 
 const appId = 'firerat' + (process.env.FIRE_RAT_SESSION_PREFIX || '')
 
@@ -16,13 +21,12 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: true,
-      preload: path.join(__dirname, 'preload.js'),
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       session: session.fromPartition(appId, {cache: true})
     },
   })
 
-  win.loadFile('index.html')
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   const getContentBounds = bounds => {
     const headerHeight = 30
@@ -46,7 +50,6 @@ const createWindow = () => {
           nodeIntegration: false,
           contextIsolation: true,
           sandbox: true,
-          preload: path.join(__dirname, 'service-preload.js'),
           session: session.fromPartition('persist:' + appId + '.' + target.sessionId, {cache: true})
         },
       })

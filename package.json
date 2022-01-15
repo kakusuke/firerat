@@ -2,7 +2,7 @@
   "name": "firerat",
   "version": "0.1.0",
   "description": "",
-  "main": "main.js",
+  "main": ".webpack/main",
   "scripts": {
     "start": "FIRE_RAT_SESSION_PREFEX=dev_ electron-forge start",
     "package": "electron-forge package",
@@ -18,16 +18,42 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.61",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
-    "electron": "^16.0.6"
+    "@electron-forge/plugin-webpack": "^6.0.0-beta.63",
+    "css-loader": "^6.5.1",
+    "electron": "^16.0.6",
+    "style-loader": "^3.3.1"
   },
   "dependencies": {
     "electron-context-menu": "^3.1.1",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1"
   },
   "config": {
     "forge": {
       "packagerConfig": {},
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "devContentSecurityPolicy": "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:",
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "name": "main_window",
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.js",
+                  "preload": {
+                    "js": "./src/preload.js"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      ],
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",

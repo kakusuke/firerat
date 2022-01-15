@@ -1,3 +1,5 @@
+import './index.css'
+
 const container = document.querySelector('ul')
 const table = document.querySelector('table tbody')
 

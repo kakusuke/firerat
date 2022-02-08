@@ -1,4 +1,3 @@
-import './@types/preload.d.ts'
 import { contextBridge, ipcRenderer } from 'electron';
 import { ServiceState, ServiceStatesConsumer } from "./type/ServiceState";
 

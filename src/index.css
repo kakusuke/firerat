@@ -1,31 +1,25 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
-ul {
-  height: 30px;
-  box-sizing: border-box;
-  border-bottom: solid 1px #ccc;
-  list-style: none;
-  display: flex;
-  width: 100%;
-  padding: 0 1em 5px 1em;
-  margin: 0;
-}
-li {
-  padding: 0 0.5em;
+#container {
   position: relative;
-  cursor: pointer;
-  user-select: none;
 }
-li:not(:last-child)::after {
-  content: '';
-  display: inline-block;
-  border-right: solid 1px #ccc;
-  position: absolute;
-  right: 0;
-  top: 20%;
-  height: 60%;
+header {
+  position: fixed;
+  width: min(45rem, 90%);
+  background-color: var(--bg);
+}
+header nav {
+  padding: .2rem 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+header ~ hr {
+  margin-top: 45px;
+  position: fixed;
+  width: 100%;
+  left: 0;
+}
+
+main {
+  padding-top: 50px;
+  height: calc(100vh - 50px);
+  overflow-y: auto;
 }

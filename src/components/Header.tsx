@@ -8,10 +8,10 @@ export default () => {
 
   return (
     <header>
-      <ul>
+      <nav>
         <HeaderItem index={-1}/>
         {services.map((_, i) => <HeaderItem index={i} key={i}/>)}
-      </ul>
+      </nav>
     </header>
   )
 }

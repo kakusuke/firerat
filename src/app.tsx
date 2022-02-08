@@ -8,6 +8,7 @@ function render() {
   ReactDOM.render(
     <RecoilRoot>
       <Header/>
+      <hr/>
       <Preferences/>
     </RecoilRoot>
     , document.getElementById('container'));

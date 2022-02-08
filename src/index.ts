@@ -33,7 +33,7 @@ const createWindow = () => {
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   const getContentBounds = (bounds: Electron.Rectangle) => {
-    const headerHeight = 30
+    const headerHeight = 46
     const winBounds = win.getBounds()
     const contentBounds = win.getContentBounds()
     const height = bounds.height - (winBounds.height - contentBounds.height) - headerHeight

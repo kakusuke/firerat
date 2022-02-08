@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, MouseEvent } from "react"
 import { useRecoilValue } from "recoil";
 import { serviceState } from "../state/servicesState";
 
@@ -8,8 +8,9 @@ interface HeaderItemProps {
 
 export default (props: HeaderItemProps) => {
   const service = useRecoilValue(serviceState(props.index))
-  const onClick = useCallback(() => {
+  const onClick = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
     services.select({index: props.index})
   }, [props.index])
-  return (<li onClick={onClick}>{service?.label || '+'}</li>)
+  return (<a onClick={onClick}>{service?.label || '+'}</a>)
 }

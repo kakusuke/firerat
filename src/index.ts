@@ -1,6 +1,10 @@
-const { app, BrowserWindow, BrowserView, ipcMain, session, shell } = require('electron')
-const ElectronStore = require('electron-store')
-const contextMenu = require('electron-context-menu')
+import Electron, { app, BrowserWindow, BrowserView, ipcMain, session, shell } from 'electron'
+import ElectronStore from 'electron-store'
+import contextMenu from 'electron-context-menu'
+import { ServiceState } from "./type/ServiceState";
+
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -10,7 +14,7 @@ if (require('electron-squirrel-startup')) {
 
 const appId = 'firerat.' + process.env.NODE_ENV
 
-const store = new ElectronStore({
+const store = new ElectronStore<ServiceState[]>({
   name: appId
 })
 
@@ -28,7 +32,7 @@ const createWindow = () => {
 
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  const getContentBounds = bounds => {
+  const getContentBounds = (bounds: Electron.Rectangle) => {
     const headerHeight = 30
     const winBounds = win.getBounds()
     const contentBounds = win.getContentBounds()
@@ -37,12 +41,12 @@ const createWindow = () => {
     return {height: Math.max(0, height), width: Math.max(0, width), x: 0, y: headerHeight}
   }
 
-  let services = store.get('services') || [
+  let services: ServiceState[] = store.get('services') || [
       {sessionId: 'gmail', url: 'https://mail.google.com/', label: 'GMail'},
       {sessionId: 'google', url: 'https://google.com', label: 'Google'}
     ]
 
-  let views = []
+  let views: BrowserView[] = []
   function createViews() {
     views = services.map(target => {
       const view = new BrowserView({
@@ -81,7 +85,7 @@ const createWindow = () => {
   createViews()
 
   let activeViewIndex = -1
-  const activate = index => {
+  const activate = (index: number) => {
     if (activeViewIndex === index) return
     activeViewIndex = index
 
@@ -105,7 +109,7 @@ const createWindow = () => {
     services = message
     store.set('services', services)
     win.setBrowserView(null)
-    views.forEach(view => view.webContents.destroy())
+    views.forEach(view => view.webContents.delete())
     createViews()
   })
 

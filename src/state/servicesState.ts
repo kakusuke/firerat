@@ -6,7 +6,7 @@ export const servicesState = atom<ServiceState[]>({
   default: [],
   effects:[
     ({setSelf, onSet}) => {
-      onSet(states => services.set(_ => states));
+      onSet(states => services.set(states));
 
       const cb = (states: ServiceState[]) => setSelf(states)
       services.on('change', cb)

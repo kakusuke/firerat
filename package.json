@@ -65,6 +65,14 @@
                   "preload": {
                     "js": "./src/preload.ts"
                   }
+                },
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/service-renderer.ts",
+                  "name": "service_view",
+                  "preload": {
+                    "js": "./src/service-preload.ts"
+                  }
                 }
               ]
             }

@@ -7,9 +7,7 @@ interface _ServiceState {
 interface Services {
   select(data: {index: number});
 
-  set(fn: (data: _ServiceState[]) => _ServiceState[]);
-
-  save(): void;
+  set(data: _ServiceState[]);
 
   editPreference(): void;
 

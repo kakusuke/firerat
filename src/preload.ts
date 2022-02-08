@@ -1,21 +1,16 @@
-/// <reference path="@types/preload.d.ts"/>
+import './@types/preload.d.ts'
 import { contextBridge, ipcRenderer } from 'electron';
-import { ServiceState, ServiceStatesConsumer, ServiceStatesFilter } from "./type/ServiceState";
+import { ServiceState, ServiceStatesConsumer } from "./type/ServiceState";
 
-let services: ServiceState[] = []
 const listener: {[event: string]: ServiceStatesConsumer[]} = {
-  change: [states => services = states]
 }
 
 const api: Services = {
   select(data: {index: number}) {
     ipcRenderer.send('selectservice', data)
   },
-  set(fn: ServiceStatesFilter) {
-    ipcRenderer.send('setservice', fn(services))
-  },
-  save() {
-    ipcRenderer.send('saveservice', services)
+  set(services: ServiceState[]) {
+    ipcRenderer.send('setservice', services)
   },
   editPreference() {
     ipcRenderer.send("editpreference")

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback } from "react"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { serviceDraftState, serviceState } from "../state/servicesState";
+import { useRecoilState } from "recoil";
+import { serviceDraftState } from "../state/servicesState";
 
 interface HeaderItemProps {
   index: number
@@ -20,7 +20,7 @@ export default (props: HeaderItemProps) => {
   }, [])
 
   const onDelete = useCallback(() => {
-    setService(old => null)
+    setService(null)
   }, [])
 
   return (service && <tr>

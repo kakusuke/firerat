@@ -5,6 +5,7 @@ import { ServiceState } from "./type/ServiceState";
 
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const SERVICE_VIEW_PRELOAD_WEBPACK_ENTRY: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -54,12 +55,27 @@ const createWindow = () => {
           nodeIntegration: false,
           contextIsolation: true,
           sandbox: true,
-          session: session.fromPartition('persist:' + appId + '.' + target.sessionId, {cache: true})
+          session: session.fromPartition('persist:' + appId + '.' + target.sessionId, {cache: true}),
+          preload: SERVICE_VIEW_PRELOAD_WEBPACK_ENTRY
         },
       })
       view.setBounds(getContentBounds(win.getBounds()))
       view.setBackgroundColor('#fff')
       view.webContents.loadURL(target.url)
+
+      const notificationProxyJs = `((api) => {
+        const N = new Proxy(Notification, {
+          construct: function(target, args) {
+            const n = new target(...args)
+            n.addEventListener('click', function() {
+              api.selectNotification()
+            })
+            return n
+          }
+        })
+        Object.defineProperty(window, 'Notification', {value: N})
+      })(window.__api || window.parent.__api)`
+      view.webContents.executeJavaScript(notificationProxyJs)
 
       win.on('will-resize', (e, bounds) => {
         view.setBounds(getContentBounds(bounds))
@@ -67,7 +83,7 @@ const createWindow = () => {
 
       contextMenu({
         window: view.webContents,
-        prepend: (defaultActions, parameters, browserWindow) => [
+        prepend: (defaultActions, parameters) => [
           {
             label: 'Open link in browser',
             visible: parameters.linkURL.trim().length > 0,
@@ -102,18 +118,19 @@ const createWindow = () => {
 
   ipcMain.on('setservice', (e, message) => {
     services = message
-    win.webContents.send('changeservice', services)
-  })
-
-  ipcMain.on('saveservice', (e, message) => {
-    services = message
     store.set('services', services)
     win.setBrowserView(null)
     views.forEach(view => view.webContents.delete())
     createViews()
+    win.webContents.send('changeservice', services)
   })
 
   ipcMain.on('editpreference', () => store.openInEditor())
+
+  ipcMain.on('selectnotification', e => {
+    const view = views.find(v => v.webContents === e.sender)
+    activate(views.indexOf(view))
+  })
 
   win.on('ready-to-show', () => {
     win.webContents.send('changeservice', services)
@@ -130,5 +147,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
-
-

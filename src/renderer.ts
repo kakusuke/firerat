@@ -1,4 +1,4 @@
-/// <reference path="./@types/preload.d.ts"/>
 import 'simpledotcss'
+import './@types/preload.d.ts'
 import './index.css'
-import './app';
+import './app'

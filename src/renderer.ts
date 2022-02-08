@@ -1,21 +1,10 @@
 /// <reference path="./@types/preload.d.ts"/>
 import './index.css'
+import './app';
 
-const container = document.querySelector('ul')
 const table = document.querySelector('table tbody')
 
 services.on('change', target => {
-  container.replaceChildren(
-    el('li', [{
-      click: () => services.select({index: -1})
-    }], '+'),
-    ...target.map((service: any, index: any) => el('li', [{
-        click: () => services.select({index})
-      }], [
-      el('span', service.label),
-    ]))
-  )
-
   table.replaceChildren(...target.map((service: any, index: any) => {
     return el('tr', [
       el('td', [
